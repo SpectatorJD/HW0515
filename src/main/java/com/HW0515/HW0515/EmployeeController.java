@@ -1,21 +1,40 @@
 package com.HW0515.HW0515;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+
 @RestController
+@RequestMapping("/employee")
 public class EmployeeController {
     private final EmployeeService service;
 
-    public EmployeeController(EmployeeService service) {
+
+    public EmployeeController(@Qualifier("employeeService") EmployeeService service) {
         this.service = service;
     }
 
-    @GetMapping(path = " /employee/add")
-    public String addEmployee(@RequestParam("firstName") String fistName, @RequestParam("lastName") String lastName) {
-        final String employee;
-        employee = service.getEmployee(fistName,lastName);
-        return employee;
+    @GetMapping("/add")
+    public Employee addEmployee(@RequestParam String firstName, @RequestParam String lastName){
+        return service.add(firstName, lastName);
+    }
+
+    @GetMapping("/remove")
+    public Employee removeEmployee(@RequestParam String firstName, @RequestParam String lastName){
+        return service.remove(firstName, lastName);
+    }
+
+    @GetMapping("/find")
+    public Employee findEmployee(@RequestParam String firstName, @RequestParam String lastName){
+        return service.find(firstName, lastName);
+    }
+    @GetMapping
+    public Collection<Employee> findAll(){
+        return service.findAll();
     }
 }
+
