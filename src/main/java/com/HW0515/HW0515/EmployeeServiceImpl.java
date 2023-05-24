@@ -3,36 +3,36 @@ package com.HW0515.HW0515;
 import com.HW0515.HW0515.exception.EmployeeAlreadyAddedException;
 import com.HW0515.HW0515.exception.EmployeeNotFoundException;
 import org.springframework.stereotype.Service;
+import java.util.Map;
+import java.util.HashMap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final List<Employee> employeeList;
+    private final Map<String, Employee> employess;
 
     public EmployeeServiceImpl() {
-        this.employeeList = new ArrayList<>();
+        this.employess = new HashMap<>();
     }
 
     @Override
     public Employee add(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (employeeList.contains(employee)){
+        if (employess.containsKey(employee)){
             throw new EmployeeAlreadyAddedException();
         }
-        employeeList.add(employee);
+        employess.put(employee.getFullName(), employee);
         return employee;
     }
 
     @Override
     public Employee remove(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if(employeeList.contains(employee)){
-        employeeList.remove(employee);
-        return employee;
+        if(employess.containsKey(employee.getFullName())){
+       return employess.remove(employee.getFullName());
+
     }
         throw  new EmployeeNotFoundException();
     }
@@ -41,7 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee find(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
 
-        if(employeeList.contains(employee)){
+        if(employess.containsKey(employee.getFullName())){
             return employee;
         }
         throw  new EmployeeNotFoundException();
@@ -49,6 +49,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Collection<Employee> findAll() {
-        return Collections.unmodifiableList(employeeList);
+        return Collections.unmodifiableCollection(employess.values());
     }
 }
